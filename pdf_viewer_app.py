@@ -31,32 +31,41 @@ def main():
     if uploaded_file is not None:
         # Load the PDF using PyMuPDF (fitz)
         pdf_document = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+        search_engine = ChatGPT_pages_search(pdf_file)
 
-        # Show a radio button for user to choose input type
-        input_type = st.sidebar.radio("Choose input type:", ("Text Input", "Speech Input"))
+        # Show a radio button for the user to choose input type
+        input_type = st.sidebar.radio("Choose input type:", ("Text Input", "Speech Input"), key="radio_button")
 
-        query = ""  # Initialize the query variable with an empty string
+        # Initialize the query variable with an empty string
+        if "query" not in st.session_state:
+            st.session_state.query = ""
 
         if input_type == "Text Input":
             # Show a regular text input field
-            query = st.sidebar.text_input("Enter your query here:", "", key="input_query")
+            st.sidebar.subheader("Text Input")
+            query = st.sidebar.text_input("Enter your query here:", st.session_state.query, key="input_query")
+
+            # Store the query in session_state
+            st.session_state.query = query
 
         elif input_type == "Speech Input":
             # Show the "Convert Speech to Text" button
-            if st.sidebar.button("Convert Speech to Text"):
+            st.sidebar.subheader("Speech Input")
+            if st.sidebar.button("Convert Speech to Text", key="speech_to_text"):
                 text_from_speech = convert_speech_to_text()
-                query = text_from_speech if text_from_speech else ""
+                query = text_from_speech
 
-        if query:
-            query = query + " on what page it was found?"
-            st.sidebar.write(f"Your query is: {query.replace(' on what page it was found?', '')}")
+                # Store the query in session_state
+                st.session_state.query = query
+
+        if st.session_state.query:
+            # st.session_state.query = st.session_state.query + " on what page it was found?"
+            st.sidebar.write(f"Your query is: {st.session_state.query}")
 
         # Create a submit button
-        if st.sidebar.button("Submit"):
-            search_engine = ChatGPT_pages_search(pdf_file)
-            print(f'Query before sending is {query}.')
+        if st.sidebar.button("Submit", key="submit"):
             # Get information about the selected page using the custom function
-            answer, page_numbers = query_ChatGPT(search_engine, query)
+            answer, page_numbers = query_ChatGPT(search_engine, st.session_state.query + " on what page it was found?")
 
             # Show the GPT answer in the sidebar
             st.sidebar.markdown("## GPT Answer")
