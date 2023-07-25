@@ -53,7 +53,7 @@ class ChatGPT_pages_search:
             engine='text-davinci-003',
             # engine='gpt-3.5-turbo',
             prompt=prompt,
-            max_tokens=100,
+            max_tokens=1000,
             n=1,
             stop=None,
             temperature=0.7
