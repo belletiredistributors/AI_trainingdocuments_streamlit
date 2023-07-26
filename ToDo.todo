@@ -1,0 +1,9 @@
+Enter add a new todo item at same indentation (or split it at the cursor)
+Tab increase indentation (from anywhere in the line)
+Ctrl+d/Cmd+d toggle item done
+Ctrl+Shift+a/Cmd+Shift+a move done items into Archive project (repects nested tasks)
+
+Functionality:
+    - upload file from disk, use this file instead of fixed file
+    - make the application pretty (boundier around the img etc.)
+    - send binary data to chatgpt (to upload a files from every directory)
