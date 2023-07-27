@@ -29,7 +29,7 @@ def main():
     uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 
     if uploaded_file is not None:
-        print(uploaded_file.name)
+        pdf_file = os.path.join(os.getcwd(), 'static', 'pdfs', uploaded_file.name)
         # Load the PDF using PyMuPDF (fitz)
         pdf_document = fitz.open(stream=uploaded_file.read(), filetype="pdf")
         search_engine = ChatGPT_pages_search(pdf_file)
